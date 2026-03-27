@@ -45,6 +45,17 @@
                     <input type="text" name="curp_matricula" required
                         class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
                 </div>
+                {{-- Grupo Asignado --}}
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Grupo</label>
+                    <select name="grupo_id" required
+                        class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        <option value="">Selecciona un grupo</option>
+                        @foreach($grupos as $grupo)
+                            <option value="{{ $grupo->id }}">{{ $grupo->grado }}°{{ $grupo->nombre_grupo }} - {{ $grupo->turno }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 {{-- Botón de Acción --}}
                 <div class="pt-4">

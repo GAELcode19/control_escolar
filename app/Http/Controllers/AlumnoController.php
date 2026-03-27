@@ -15,7 +15,8 @@ public function index()
 
 public function create()
 {
-    return view('alumnos.create');
+    $grupos = \App\Models\Grupo::all();
+    return view('alumnos.create', compact('grupos'));
 }
 
 
@@ -42,10 +43,11 @@ public function store(Request $request)
     return redirect()->route('alumnos.index');
 }
 public function edit($id)
-    {
-        $alumno = Alumno::findOrFail($id);
-        return view('alumnos.edit', compact('alumno'));
-    }
+{
+    $alumno = Alumno::findOrFail($id);
+    $grupos = \App\Models\Grupo::all();
+    return view('alumnos.edit', compact('alumno', 'grupos'));
+}
 
    public function update(Request $request, $id)
 {

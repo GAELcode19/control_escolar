@@ -50,7 +50,7 @@
         </a>
     </div>
 
-    {{-- Grid de Grupos (Dinamico) --}}
+    {{-- Grid de Grupos --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($grupos as $grupo)
             <div class="bg-[#1e1e2e] border border-white/10 rounded-2xl p-5 hover:border-orange-500/50 transition group shadow-xl">
@@ -63,21 +63,35 @@
                     </span>
                 </div>
                 
-                <div class="space-y-2 mb-4">
-                    <div class="flex justify-between text-sm">
+                <div class="space-y-2 mb-4 text-sm">
+                    <div class="flex justify-between">
                         <span class="text-gray-500">Aula:</span>
-                        <span class="text-gray-300 font-medium">{{ $grupo->aula ?? 'N/A' }}</span>
+                        <span class="text-gray-300 font-medium">{{ $grupo->aula ?? 'No asignada' }}</span>
                     </div>
                 </div>
 
                 <div class="pt-4 border-t border-white/5 flex justify-end gap-2">
-                    <a href="{{ route('grupos.edit', $grupo->id) }}" class="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-orange-400 transition">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    {{-- Botón Editar --}}
+                    <a href="{{ route('grupos.edit', $grupo->id) }}" class="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-orange-400 transition" title="Editar">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
                     </a>
+
+                    {{-- Botón Eliminar --}}
+                    <form action="{{ route('grupos.destroy', $grupo->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este grupo?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-500 transition" title="Eliminar">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
         @empty
-            <div class="col-span-1 sm:col-span-2 lg:col-span-3 py-16 text-center">
+            <div class="col-span-full py-16 text-center">
                 <div class="flex flex-col items-center gap-3 text-gray-500">
                     <svg class="w-12 h-12 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 20h5v-2a4 4 0 00-5-5M9 20H4v-2a4 4 0 015-5m6-4a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     <p class="text-sm">No hay grupos registrados aún.</p>

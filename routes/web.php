@@ -1,52 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AlumnoController;
-use App\Http\Controllers\DocenteController;
-use App\Http\Controllers\MateriaController;
-use App\Http\Controllers\InscripcionController;
-use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\{
+    AlumnoController,
+    DocenteController,
+    MateriaController,
+    InscripcionController,
+    GrupoController,
+    CalificacionController,
+    AsistenciaController,
+    ReporteController
+};
+
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('dashboard');
-    }
-    return redirect()->route('login');
+    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 })->name('home');
 
 Route::get('dashboard', function () {
-
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
-     // --- INSCRIPCIONES ---
+    
     Route::resource('inscripciones', InscripcionController::class);
-     
-    // --- GRUPOS ---
     Route::resource('grupos', GrupoController::class);
-
-    // --- ALUMNOS ---
-    Route::get('/alumnos', [AlumnoController::class, 'index'])->name('alumnos.index');
-    Route::get('/alumnos/crear', [AlumnoController::class, 'create'])->name('alumnos.create'); // Muestra el formulario
-    Route::post('/alumnos/guardar', [AlumnoController::class, 'store'])->name('alumnos.store');   // Guarda en la DB
-    Route::resource('alumnos', AlumnoController::class)->except(['show']);
-
-    // --- DOCENTES ---
-    Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
-    Route::get('/docentes/crear', [DocenteController::class, 'create'])->name('docentes.create');
-    Route::post('/docentes/guardar', [DocenteController::class, 'store'])->name('docentes.store');
-    Route::resource('docentes', DocenteController::class)->except(['show']);
-
-    // --- MATERIAS ---
-    Route::get('/materias', [MateriaController::class, 'index'])->name('materias.index');
-    Route::get('/materias/crear', [MateriaController::class, 'create'])->name('materias.create');
-    Route::post('/materias/guardar', [MateriaController::class, 'store'])->name('materias.store');
+    Route::resource('alumnos', AlumnoController::class);
+    Route::resource('docentes', DocenteController::class);
     Route::resource('materias', MateriaController::class);
 
-    Route::view('calificaciones', 'calificaciones.index')->name('calificaciones.index');
-    Route::view('asistencia', 'asistencia.index')->name('asistencia.index');
-    Route::view('reportes', 'reportes.index')->name('reportes.index');
+    
+    Route::prefix('calificaciones')->name('calificaciones.')->group(function () {
+        Route::get('/', [CalificacionController::class, 'index'])->name('index');
+        Route::get('/create', [CalificacionController::class, 'create'])->name('create');
+        Route::post('/', [CalificacionController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [CalificacionController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CalificacionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CalificacionController::class, 'destroy'])->name('destroy');
+    });
+
+  
+        Route::resource('asistencia', AsistenciaController::class)->parameters([
+            'asistencia' => 'asistencia'
+        ]);
+
+        Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+
+        // --- OTROS MÓDULOS (VISTAS) ---
     Route::view('configuracion', 'configuracion.index')->name('configuracion.index');
 });
 
