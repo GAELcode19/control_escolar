@@ -16,7 +16,7 @@
             </div>
             <div>
                 <p class="text-xs text-gray-400">Total Alumnos</p>
-                <p class="text-2xl font-bold text-white">0</p>
+                <p class="text-2xl font-bold text-white">{{ $totalAlumnos }}</p>
             </div>
         </div>
         <div class="bg-[#1e1e2e] border border-white/10 rounded-xl p-4 flex items-center gap-4">
@@ -27,7 +27,7 @@
             </div>
             <div>
                 <p class="text-xs text-gray-400">Total Docentes</p>
-                <p class="text-2xl font-bold text-white">0</p>
+                <p class="text-2xl font-bold text-white">{{ $totalDocentes }}</p>
             </div>
         </div>
         <div class="bg-[#1e1e2e] border border-white/10 rounded-xl p-4 flex items-center gap-4">
@@ -38,7 +38,7 @@
             </div>
             <div>
                 <p class="text-xs text-gray-400">Promedio General</p>
-                <p class="text-2xl font-bold text-white">0.0</p>
+                <p class="text-2xl font-bold text-white">{{ number_format($promedioGeneral, 1) }}</p>
             </div>
         </div>
         <div class="bg-[#1e1e2e] border border-white/10 rounded-xl p-4 flex items-center gap-4">
@@ -49,32 +49,29 @@
             </div>
             <div>
                 <p class="text-xs text-gray-400">% Asistencia</p>
-                <p class="text-2xl font-bold text-white">0%</p>
+                <p class="text-2xl font-bold text-white">{{ $porcentajeAsistencia }}%</p>
             </div>
         </div>
     </div>
 
     {{-- Gráficas row --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-        {{-- Gráfica Asistencia --}}
         <div class="bg-[#1e1e2e] border border-white/10 rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <p class="text-white font-semibold text-sm">Asistencia Mensual</p>
-                    <p class="text-gray-400 text-xs">Presentes vs Ausentes</p>
+                    <p class="text-gray-400 text-xs">Presentes vs Ausentes (4 Semanas)</p>
                 </div>
                 <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded-lg">{{ now()->format('M Y') }}</span>
             </div>
             <canvas id="asistenciaChart" height="200"></canvas>
         </div>
 
-        {{-- Gráfica Calificaciones --}}
         <div class="bg-[#1e1e2e] border border-white/10 rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <p class="text-white font-semibold text-sm">Distribución de Calificaciones</p>
-                    <p class="text-gray-400 text-xs">Por rango de calificación</p>
+                    <p class="text-gray-400 text-xs">Por rango académico</p>
                 </div>
                 <span class="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded-lg">Actual</span>
             </div>
@@ -82,10 +79,11 @@
         </div>
     </div>
 
-{{-- Reportes rápidos --}}
+    {{-- Reportes rápidos --}}
     <div>
         <p class="text-white font-semibold text-sm mb-3">Exportar Reportes</p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {{-- Los enlaces están vacíos (#) a la espera de crear las funciones de PDF --}}
             <a href="#" class="bg-[#1e1e2e] border border-white/10 hover:border-indigo-500/40 rounded-xl p-4 flex items-center gap-3 transition group">
                 <div class="bg-indigo-500/20 text-indigo-400 rounded-lg p-2.5 group-hover:bg-indigo-500/30 transition shrink-0">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -96,10 +94,8 @@
                     <p class="text-white text-sm font-medium">Reporte de Alumnos</p>
                     <p class="text-gray-400 text-xs">Listado completo en PDF</p>
                 </div>
-                <svg width="16" height="16" class="text-gray-500 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
             </a>
+
             <a href="#" class="bg-[#1e1e2e] border border-white/10 hover:border-emerald-500/40 rounded-xl p-4 flex items-center gap-3 transition group">
                 <div class="bg-emerald-500/20 text-emerald-400 rounded-lg p-2.5 group-hover:bg-emerald-500/30 transition shrink-0">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,10 +106,8 @@
                     <p class="text-white text-sm font-medium">Reporte de Calificaciones</p>
                     <p class="text-gray-400 text-xs">Por grupo y materia</p>
                 </div>
-                <svg width="16" height="16" class="text-gray-500 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
             </a>
+
             <a href="#" class="bg-[#1e1e2e] border border-white/10 hover:border-blue-500/40 rounded-xl p-4 flex items-center gap-3 transition group">
                 <div class="bg-blue-500/20 text-blue-400 rounded-lg p-2.5 group-hover:bg-blue-500/30 transition shrink-0">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -124,38 +118,32 @@
                     <p class="text-white text-sm font-medium">Reporte de Asistencia</p>
                     <p class="text-gray-400 text-xs">Mensual por grupo</p>
                 </div>
-                <svg width="16" height="16" class="text-gray-500 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
             </a>
         </div>
     </div>
-
 </div>
 
-{{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const chartDefaults = {
-        color: '#9ca3af',
-        borderColor: 'rgba(255,255,255,0.05)',
-    };
+    // Configuración global para que Chart.js se vea bien en tema oscuro
+    Chart.defaults.color = '#9ca3af';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
 
-    // Asistencia Chart
+    // Gráfica de Asistencia (Barras)
     new Chart(document.getElementById('asistenciaChart'), {
         type: 'bar',
         data: {
-            labels: ['Sem 1','Sem 2','Sem 3','Sem 4'],
+            labels: ['Semana 4', 'Semana 3', 'Semana 2', 'Semana Actual'],
             datasets: [
                 {
                     label: 'Presentes',
-                    data: [0, 0, 0, 0],
+                    data: @json($asistenciaData['presentes']),
                     backgroundColor: 'rgba(34,197,94,0.7)',
                     borderRadius: 6,
                 },
                 {
                     label: 'Ausentes',
-                    data: [0, 0, 0, 0],
+                    data: @json($asistenciaData['ausentes']),
                     backgroundColor: 'rgba(239,68,68,0.7)',
                     borderRadius: 6,
                 }
@@ -163,37 +151,41 @@
         },
         options: {
             responsive: true,
-            plugins: { legend: { labels: { color: '#9ca3af' } } },
+            plugins: {
+                legend: { position: 'top', labels: { boxWidth: 12, usePointStyle: true } }
+            },
             scales: {
-                x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
             }
         }
     });
 
-    // Calificaciones Chart
+    // Gráfica de Calificaciones (Dona)
     new Chart(document.getElementById('calificacionesChart'), {
         type: 'doughnut',
         data: {
             labels: ['90-100', '80-89', '70-79', '60-69', 'Reprobado'],
             datasets: [{
-                data: [0, 0, 0, 0, 0],
+                data: @json($distribucionCalificaciones),
                 backgroundColor: [
-                    'rgba(99,102,241,0.8)',
-                    'rgba(34,197,94,0.8)',
-                    'rgba(234,179,8,0.8)',
-                    'rgba(249,115,22,0.8)',
-                    'rgba(239,68,68,0.8)',
+                    'rgba(99,102,241,0.8)', // Indigo
+                    'rgba(34,197,94,0.8)',  // Verde
+                    'rgba(234,179,8,0.8)',  // Amarillo
+                    'rgba(249,115,22,0.8)', // Naranja
+                    'rgba(239,68,68,0.8)',  // Rojo
                 ],
                 borderWidth: 0,
+                hoverOffset: 15
             }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { labels: { color: '#9ca3af' } } },
-            cutout: '65%',
+            cutout: '70%',
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+            }
         }
     });
 </script>
-
 </x-layouts::app>

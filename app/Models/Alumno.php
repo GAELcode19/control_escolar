@@ -2,9 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Alumno extends Model
 {
-    //
+    use HasFactory;
+
+   protected $fillable = [
+    'nombre', 
+    'apellido', 
+    'email', 
+    'curp_matricula', 
+    'estatus', 
+    'grupo_id' // <--- AÑADE ESTO
+];
+
+public function grupo()
+{
+    return $this->belongsTo(Grupo::class);
+}
 }
