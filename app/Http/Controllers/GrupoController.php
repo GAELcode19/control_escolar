@@ -24,18 +24,27 @@ class GrupoController extends Controller
         return view('grupos.create');
     }
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
-        'nombre_grupo' => 'required|string|max:10',
-        'grado' => 'required|integer',
+        'nombre_grupo' => 'required|string|max:20',
+        'grado' => 'required|integer|min:1|max:12',
         'turno' => 'required|in:Matutino,Vespertino',
-        'aula' => 'nullable|string|max:50',
+        'aula' => 'required|string|max:20', // <--- AGREGADO AQUÍ
+    ], [
+        'nombre_grupo.max' => 'El nombre debe ser menor a 20 caracteres.',
+        'aula.max' => 'El nombre del aula debe ser menor a 20 caracteres.', // <--- MENSAJE DE ERROR
     ]);
 
-    \App\Models\Grupo::create($request->all());
+    // Asegúrate de que tu modelo reciba el campo aula
+    \App\Models\Grupo::create([
+        'nombre_grupo' => $request->nombre_grupo,
+        'grado' => $request->grado,
+        'turno' => $request->turno,
+        'aula' => $request->aula, // <--- AGREGADO AQUÍ
+    ]);
 
-    return redirect()->route('grupos.index')->with('success', '¡Grupo creado correctamente!');
+    return redirect()->route('grupos.index')->with('status', 'Grupo creado con éxito.');
 }
 // Método para mostrar el formulario de edición
     public function edit($id)

@@ -108,19 +108,20 @@ public function update(Request $request, $id)
 
     return redirect()->route('calificaciones.index')->with('success', 'Calificación actualizada correctamente');
 }
-public function destroy($id)
-{
-    $inscripcion = Inscripcion::findOrFail($id);
-    
-    // Reseteamos los valores a 0
-    $inscripcion->update([
-        'p1' => 0,
-        'p2' => 0,
-        'p3' => 0,
-        'calificacion' => 0,
-        'estatus' => 'Cursando' // O el estatus inicial que manejes
-    ]);
+// === LÓGICA PARA "BORRAR" (RESETEAR) UNA CALIFICACIÓN ===
+    public function destroy($id)
+    {
 
-    return redirect()->route('calificaciones.index')->with('success', 'Calificación eliminada correctamente');
-}
+        $inscripcion = Inscripcion::findOrFail($id);
+
+        $inscripcion->update([
+            'p1' => 0,
+            'p2' => 0,
+            'p3' => 0,
+            'calificacion' => 0,
+            'estatus' => 'Cursando' // Regresa a cursando porque ya no tiene calificación final
+        ]);
+
+        return redirect()->route('calificaciones.index')->with('status', 'Calificación eliminada (reseteada a 0) correctamente.');
+    }
 }

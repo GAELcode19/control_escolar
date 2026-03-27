@@ -23,25 +23,23 @@ class DocenteController extends Controller
         return view('docentes.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
-            'email' => 'required|email|unique:docentes',
-            'especialidad' => 'required|string|max:100',
-        ]);
+ public function store(Request $request)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:30',
+        'apellido' => 'required|string|max:30',
+        'especialidad' => 'required|string|max:50',
+        'email' => 'required|email|unique:docentes',
+    ], [
+        'nombre.max' => 'El nombre debe ser un nombre válido menor a 30 caracteres.',
+        'apellido.max' => 'El apellido debe ser un nombre válido menor a 30 caracteres.',
+        'email.unique' => 'Este correo ya está registrado.',
+    ]);
 
-        Docente::create([
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'email' => $request->email,
-            'especialidad' => $request->especialidad,
-            'estatus' => 'Activo',
-        ]);
+    \App\Models\Docente::create($request->all());
 
-        return redirect()->route('docentes.index')->with('status', '¡Docente registrado con éxito!');
-    }
+    return redirect()->route('docentes.index')->with('status', 'Docente registrado con éxito.');
+}
     public function edit($id)
 {
     $docente = Docente::findOrFail($id);

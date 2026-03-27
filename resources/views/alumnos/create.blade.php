@@ -20,41 +20,61 @@
                     {{-- Nombre --}}
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Nombre(s)</label>
-                        <input type="text" name="nombre" required 
-                            class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        {{-- Se agregó maxlength="30" y la clase de error --}}
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" maxlength="30" required 
+                            class="w-full rounded-lg border @error('nombre') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        @error('nombre')
+                            <p class="text-red-500 text-[10px] mt-1 font-medium italic">Debe ser un nombre válido menor a 30 caracteres.</p>
+                        @enderror
                     </div>
 
                     {{-- Apellido --}}
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Apellidos</label>
-                        <input type="text" name="apellido" required 
-                            class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        {{-- Se agregó maxlength="30" y la clase de error --}}
+                        <input type="text" name="apellido" value="{{ old('apellido') }}" maxlength="30" required 
+                            class="w-full rounded-lg border @error('apellido') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        @error('apellido')
+                            <p class="text-red-500 text-[10px] mt-1 font-medium italic">Debe ser un nombre válido menor a 30 caracteres.</p>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Email --}}
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Correo Electrónico</label>
-                    <input type="email" name="email" required 
-                        class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                    <input type="email" name="email" value="{{ old('email') }}" required 
+                        class="w-full rounded-lg border @error('email') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                    @error('email')
+                        <p class="text-red-500 text-[10px] mt-1 font-medium italic">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- CURP / Matrícula --}}
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">CURP / Matrícula</label>
-                    <input type="text" name="curp_matricula" required
-                        class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                    <input type="text" name="curp_matricula" value="{{ old('curp_matricula') }}" required
+                        class="w-full rounded-lg border @error('curp_matricula') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                    @error('curp_matricula')
+                        <p class="text-red-500 text-[10px] mt-1 font-medium italic">{{ $message }}</p>
+                    @enderror
                 </div>
+
                 {{-- Grupo Asignado --}}
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Grupo</label>
                     <select name="grupo_id" required
-                        class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
+                        class="w-full rounded-lg border @error('grupo_id') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white">
                         <option value="">Selecciona un grupo</option>
                         @foreach($grupos as $grupo)
-                            <option value="{{ $grupo->id }}">{{ $grupo->grado }}°{{ $grupo->nombre_grupo }} - {{ $grupo->turno }}</option>
+                            <option value="{{ $grupo->id }}" {{ old('grupo_id') == $grupo->id ? 'selected' : '' }}>
+                                {{ $grupo->grado }}°{{ $grupo->nombre_grupo }} - {{ $grupo->turno }}
+                            </option>
                         @endforeach
                     </select>
+                    @error('grupo_id')
+                        <p class="text-red-500 text-[10px] mt-1 font-medium italic">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Botón de Acción --}}
@@ -69,4 +89,3 @@
         </div>
     </div>
 </x-layouts::app>
-                    

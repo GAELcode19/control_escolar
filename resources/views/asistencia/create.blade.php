@@ -12,75 +12,62 @@
     <form action="{{ route('asistencia.store') }}" method="POST">
         @csrf
 
-        {{-- Configuración de la Sesión --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-[#1e1e2e] border border-white/10 p-4 rounded-2xl">
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Fecha</label>
-                <input type="date" name="fecha" value="{{ now()->format('Y-m-d') }}" class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="date" name="fecha" value="{{ now()->format('Y-m-d') }}" class="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2.5 text-white focus:outline-none">
             </div>
+
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Grupo</label>
-                <select name="grupo_id" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                <select name="grupo_id" id="grupo_select" required class="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2.5 text-white focus:outline-none">
                     <option value="">Seleccionar Grupo</option>
-                    @foreach($grupos as $g)
-                        <option value="{{ $g->id }}">{{ $g->grado }}°{{ $g->nombre_grupo }}</option>
+                    @foreach($grupos as $grupo)
+                        <option value="{{ $grupo->id }}">{{ $grupo->grado }}° {{ $grupo->nombre_grupo }}</option>
                     @endforeach
                 </select>
             </div>
+
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Materia</label>
-                <select name="materia_id" required class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                <select name="materia_id" id="materia_select" required class="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2.5 text-white focus:outline-none">
                     <option value="">Seleccionar Materia</option>
-                    @foreach($materias as $m)
-                        <option value="{{ $m->id }}">{{ $m->nombre_materia }}</option>
+                    @foreach($materias as $materia)
+                        {{-- Filtro de materia por grupo --}}
+                        <option value="{{ $materia->id }}" class="materia-option" data-grupo="{{ $materia->grupo_id }}">
+                            {{ $materia->nombre_materia }}
+                        </option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-        {{-- Lista de Alumnos --}}
-        <div class="bg-[#1e1e2e] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-            <table class="w-full text-sm text-left">
+        <div class="bg-[#1e1e2e] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-white/5 text-gray-400 text-xs uppercase tracking-widest">
-                        <th class="px-6 py-4">Alumno</th>
-                        <th class="px-6 py-4 text-center">Estatus de Asistencia</th>
+                    <tr class="bg-white/5 border-b border-white/5">
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase">Alumno</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-right">Asistencia</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-white/[0.03]">
+                <tbody id="alumnos_body">
                     @foreach($alumnos as $alumno)
-                    <tr class="hover:bg-white/[0.01] transition-colors" id="row-{{ $alumno->id }}">
+                    <tr class="alumno-row border-b border-white/5" data-grupo="{{ $alumno->grupo_id }}">
                         <td class="px-6 py-4">
                             <input type="hidden" name="asistencias[{{ $loop->index }}][alumno_id]" value="{{ $alumno->id }}">
-                            <div class="flex flex-col">
-                                <span class="text-white font-medium">{{ $alumno->nombre }} {{ $alumno->apellido }}</span>
-                                <span class="text-[10px] text-gray-500">MATRÍCULA: {{ $alumno->matricula ?? 'S/N' }}</span>
+                            <div class="flex items-center gap-3">
+                                <div class="text-sm font-semibold text-white">{{ $alumno->nombre }} {{ $alumno->apellido }}</div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-center items-center gap-2">
-                                {{-- Presente --}}
-                                <label class="cursor-pointer group">
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <label class="cursor-pointer">
                                     <input type="radio" name="asistencias[{{ $loop->index }}][estatus]" value="Presente" checked class="hidden peer">
-                                    <div class="px-3 py-1.5 rounded-lg border border-white/5 bg-white/5 text-gray-500 peer-checked:bg-emerald-500/20 peer-checked:text-emerald-400 peer-checked:border-emerald-500/30 transition-all text-[10px] font-bold uppercase">
-                                        Presente
-                                    </div>
+                                    <div class="px-3 py-1 rounded-lg border border-white/5 peer-checked:bg-emerald-500/20 peer-checked:text-emerald-400 text-[10px] font-bold">PRESENTE</div>
                                 </label>
-
-                                {{-- Ausente --}}
-                                <label class="cursor-pointer group">
+                                <label class="cursor-pointer">
                                     <input type="radio" name="asistencias[{{ $loop->index }}][estatus]" value="Ausente" class="hidden peer">
-                                    <div class="px-3 py-1.5 rounded-lg border border-white/5 bg-white/5 text-gray-500 peer-checked:bg-red-500/20 peer-checked:text-red-400 peer-checked:border-red-500/30 transition-all text-[10px] font-bold uppercase">
-                                        Ausente
-                                    </div>
-                                </label>
-
-                                {{-- Retardo --}}
-                                <label class="cursor-pointer group">
-                                    <input type="radio" name="asistencias[{{ $loop->index }}][estatus]" value="Retardo" class="hidden peer">
-                                    <div class="px-3 py-1.5 rounded-lg border border-white/5 bg-white/5 text-gray-500 peer-checked:bg-amber-500/20 peer-checked:text-amber-400 peer-checked:border-amber-500/30 transition-all text-[10px] font-bold uppercase">
-                                        Retardo
-                                    </div>
+                                    <div class="px-3 py-1 rounded-lg border border-white/5 peer-checked:bg-red-500/20 peer-checked:text-red-400 text-[10px] font-bold">AUSENTE</div>
                                 </label>
                             </div>
                         </td>
@@ -91,10 +78,39 @@
         </div>
 
         <div class="mt-6 flex justify-end">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition shadow-lg shadow-blue-900/20">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-xl transition">
                 Guardar Asistencia
             </button>
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const grupoSelect = document.getElementById('grupo_select');
+        const materiaSelect = document.getElementById('materia_select');
+        const alumnoRows = document.querySelectorAll('.alumno-row');
+        const materiaOptions = document.querySelectorAll('.materia-option');
+
+        function filtrar() {
+            const grupoId = grupoSelect.value;
+
+            // Filtrar Alumnos
+            alumnoRows.forEach(row => {
+                row.style.display = (grupoId === "" || row.dataset.grupo === grupoId) ? "" : "none";
+            });
+
+            // Filtrar Materias
+            materiaOptions.forEach(opt => {
+                opt.style.display = (grupoId === "" || opt.dataset.grupo === grupoId) ? "" : "none";
+            });
+
+            // Resetear materia al cambiar grupo para evitar errores
+            materiaSelect.value = "";
+        }
+
+        grupoSelect.addEventListener('change', filtrar);
+        filtrar();
+    });
+</script>
 </x-layouts::app>

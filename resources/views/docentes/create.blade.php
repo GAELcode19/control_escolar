@@ -12,24 +12,45 @@
             <form action="{{ route('docentes.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {{-- Nombre --}}
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Nombre(s)</label>
-                        <input type="text" name="nombre" required class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white">
+                        <input type="text" name="nombre" value="{{ old('nombre') }}" maxlength="30" required 
+                            class="w-full rounded-lg border @error('nombre') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                        @error('nombre')
+                            <p class="text-red-500 text-[10px] mt-1 font-medium italic">Debe ser un nombre válido menor a 30 caracteres.</p>
+                        @enderror
                     </div>
+
+                    {{-- Apellidos --}}
                     <div class="space-y-2">
                         <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Apellidos</label>
-                        <input type="text" name="apellido" required class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white">
+                        <input type="text" name="apellido" value="{{ old('apellido') }}" maxlength="30" required 
+                            class="w-full rounded-lg border @error('apellido') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                        @error('apellido')
+                            <p class="text-red-500 text-[10px] mt-1 font-medium italic">Debe ser un nombre válido menor a 30 caracteres.</p>
+                        @enderror
                     </div>
                 </div>
 
+                {{-- Correo Institucional --}}
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Correo Institucional</label>
-                    <input type="email" name="email" required class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white">
+                    <input type="email" name="email" value="{{ old('email') }}" required 
+                        class="w-full rounded-lg border @error('email') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    @error('email')
+                        <p class="text-red-500 text-[10px] mt-1 font-medium italic">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                {{-- Especialidad --}}
                 <div class="space-y-2">
                     <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Especialidad (Área)</label>
-                    <input type="text" name="especialidad" placeholder="Ej: Ciencias de la Computación" required class="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white">
+                    <input type="text" name="especialidad" value="{{ old('especialidad') }}" placeholder="Ej: Ciencias de la Computación" required 
+                        class="w-full rounded-lg border @error('especialidad') border-red-500 @else border-zinc-300 @enderror bg-white px-3 py-2 text-sm dark:bg-zinc-900 dark:text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                    @error('especialidad')
+                        <p class="text-red-500 text-[10px] mt-1 font-medium italic">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="pt-4">
